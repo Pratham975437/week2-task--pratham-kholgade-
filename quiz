@@ -1,0 +1,29 @@
+import json
+
+def load_quiz(filename="quiz.json"):
+    with open(filename, "r") as file:
+        return json.load(file)
+
+def start_quiz():
+    questions = load_quiz()
+    score = 0
+
+    print("\n--- Simple Quiz ---\n")
+
+    for i, q in enumerate(questions, start=1):
+        print(f"Q{i}: {q['question']}")
+        for option in q['options']:
+            print(option)
+
+        answer = input("Your answer (A/B/C/D): ").upper()
+
+        if answer == q['answer']:
+            print(" Correct!\n")
+            score += 1
+        else:
+            print(f" Wrong! Correct answer was {q['answer']}\n")
+
+    print(f"🎯 Final Score: {score}/{len(questions)}")
+
+
+start_quiz()
