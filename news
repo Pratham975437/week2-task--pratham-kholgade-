@@ -1,0 +1,29 @@
+import requests
+
+API_KEY = "49bf8372bf9e48e5ae12ceb4976f2e7f" 
+BASE_URL = "https://newsapi.org/v2/top-headlines"
+
+def get_headlines(category="technology", country="in", limit=5):
+    params = {
+        "apiKey": API_KEY,
+        "category": category,
+        "country": country,
+        "pageSize": limit
+    }
+    response = requests.get(BASE_URL, params=params)
+    data = response.json()
+
+    if data.get("status") != "ok":
+        print("Error:", data.get("message"))
+        return []
+
+    headlines = [article["title"] for article in data["articles"]]
+    return headlines
+
+if __name__ == "__main__":
+    category = input("Enter category (technology, sports, business, etc.): ")
+    headlines = get_headlines(category=category)
+
+    print(f"\nTop {len(headlines)} {category} headlines:\n")
+    for i, headline in enumerate(headlines, start=1):
+        print(f"{i}. {headline}")
