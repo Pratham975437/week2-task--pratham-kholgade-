@@ -1,0 +1,54 @@
+FILE_NAME = "budget.csv"
+
+
+if not os.path.exists(FILE_NAME):
+    with open(FILE_NAME, mode="w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(["Type", "Amount", "Description"])  # headers
+
+def add_record(record_type, amount, description=""):
+    """Add an income or expense record to CSV"""
+    with open(FILE_NAME, mode="a", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow([record_type, amount, description])
+
+def show_summary():
+    """Read CSV and calculate totals"""
+    total_income = 0
+    total_expenses = 0
+
+    with open(FILE_NAME, mode="r") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            amount = float(row["Amount"])
+            if row["Type"].lower() == "income":
+                total_income += amount
+            elif row["Type"].lower() == "expense":
+                total_expenses += amount
+
+    net_balance = total_income - total_expenses
+    print("\n--- Budget Summary ---")
+    print(f"Total Income  : {total_income}")
+    print(f"Total Expenses: {total_expenses}")
+    print(f"Net Balance   : {net_balance}")
+
+# Example usage
+if __name__ == "__main__":
+    while True:
+        choice = input("\n1. Add Income\n2. Add Expense\n3. Show Summary\n4. Exit\nChoose: ")
+        
+        if choice == "1":
+            amt = float(input("Enter income amount: "))
+            desc = input("Description: ")
+            add_record("Income", amt, desc)
+        elif choice == "2":
+            amt = float(input("Enter expense amount: "))
+            desc = input("Description: ")
+            add_record("Expense", amt, desc)
+        elif choice == "3":
+            show_summary()
+        elif choice == "4":
+            print("Exiting... Data saved in budget.csv")
+            break
+        else:
+            print("Invalid choice, try again!")
